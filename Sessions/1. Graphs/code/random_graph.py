@@ -15,7 +15,7 @@ def get_random_graph(size, density):
 
     return G
 
-G = get_random_graph(10, 0.2)
+G = get_random_graph(10, 1)
 
 nx.draw(G)
 plt.show()
