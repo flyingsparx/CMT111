@@ -79,6 +79,10 @@ Throws an exception if a cheep with the same ID already exists.
 
 Returns a single `Cheep` instance with ID matching `id`.
 
+#### `Cheep[] get_cheeps()`
+
+Returns a list of all `Cheep` instances in the network.
+
 ##### `Cheep[] get_cheeps_by_sentiment(sentiment)`
 
 Returns a list of `Cheep` instances with sentiment `sentiment`.

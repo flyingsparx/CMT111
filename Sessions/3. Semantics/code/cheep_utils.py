@@ -75,15 +75,21 @@ class CheepNetwork:
         self.con.commit()
 
     def get_cheep_by_id(self, id):
-        cheep_data = self.c.execute("SELECT * FROM cheep WHERE id="+str(id)).fetchone()
-        if cheep_data is None:
+        c = self.c.execute("SELECT * FROM cheep WHERE id="+str(id)).fetchone()
+        if c is None:
             return None
-        return Cheep(cheep_data[0], cheep_data[2], cheep_data[1], cheep_data[3])
+        return Cheep(c[0], c[2], c[1], c[3])
+
+    def get_cheeps(self):
+        cheeps = []
+        for c in self.c.execute("SELECT * FROM cheep").fetchall():
+            cheeps.append(Cheep(c[0], c[2], c[1], c[3]))
+        return cheeps
 
     def get_cheeps_by_sentiment(self, sentiment):
         cheeps = []
         for c in self.c.execute("SELECT * FROM cheep WHERE sentiment="+str(sentiment)).fetchall():
-            cheeps.append(Cheep(cheep_data[0], cheep_data[2], cheep_data[1], cheep_data[3]))
+            cheeps.append(Cheep(c[0], c[2], c[1], c[3]))
         return cheeps
 
     def get_cheeps_of_user(self, user):
