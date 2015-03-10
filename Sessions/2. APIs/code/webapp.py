@@ -44,7 +44,7 @@ def get_user_by_name(name):
 @app.route("/users", methods=["GET","POST"])
 def user_endpoint():
     response = make_response()
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add("Access-Control-Allow-Origin", "*")
     if request.method == "GET":
         response.data = json.dumps(users, indent=4)
         response.mimetype = "application/json"
@@ -75,7 +75,7 @@ def specific_user_endpoint(name):
             response.status_code = 404
     
     elif request.method == "DELETE":
-        if request.headers.get("key") == "williscool":
+        if request.headers.get('key') =='williscool':
             users.remove(get_user_by_name(name))
             response.status_code = 204
         else:
@@ -119,6 +119,6 @@ def hobbies_user_endpoint(name):
 
 
 if __name__ == '__main__':
-    app.debug = True
+    #app.debug = True
     app.run(host='0.0.0.0', port=80)
     

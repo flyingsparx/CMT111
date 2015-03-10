@@ -20,7 +20,7 @@ densities = []
 
 for i in range(0, 100):
     density = float(i)/100.0
-    G = get_random_graph(10, density)
+    G = get_random_graph(100, density)
 
     total_degree = 0
     for node in G.nodes():
