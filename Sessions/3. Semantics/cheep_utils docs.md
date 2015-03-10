@@ -10,7 +10,7 @@ This module supports some server-side functionality for creating a Twitter clone
 
 You can import all three classes as you would with any Python module:
 
-`from cheep_utils import Cheep, SentimentAnalyser, CheepNetwork
+`from cheep_utils import Cheep, SentimentAnalyser, CheepNetwork`
 
 ### `Cheep(id = None, user = None, text = None, sentiment = None)`
 
