@@ -53,6 +53,24 @@ All users should be represented by Strings (e.g. `"will"`) and all cheep IDs sho
 
 #### Method details
 
+##### `create_user(name)`
+
+Creates a new user with name `name`.
+
+Throws an `Exception` if a user with the name already exists.
+
+##### `delete_user(name)`
+
+Deletes the user with name `name`.
+
+##### `str get_user(name)`
+
+Gets a user with name `name`.
+
+##### `[str] get_users()`
+
+Returns a list of users.
+
 ##### `add_follower(user, follower)`
 
 Adds `followe` to `user`'s followers list.
@@ -79,7 +97,7 @@ Throws an exception if a cheep with the same ID already exists.
 
 Returns a single `Cheep` instance with ID matching `id`.
 
-#### `Cheep[] get_cheeps()`
+##### `Cheep[] get_cheeps()`
 
 Returns a list of all `Cheep` instances in the network.
 
