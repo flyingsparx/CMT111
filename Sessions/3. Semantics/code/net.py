@@ -27,6 +27,7 @@ if len(sys.argv) > 3:
 
 if method not in allowed_methods:
     print method+" is not a supported method"
+    exit()
 
 opener = urllib2.build_opener(urllib2.HTTPHandler)
 request = None
