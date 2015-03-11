@@ -5,4 +5,5 @@
 *.pdf
 *.aux
 *.log
+*.db
 config.py
