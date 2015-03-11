@@ -1,6 +1,3 @@
-# Author: Will Webberley (flyingsparx).
-# License: Apache
-#
 # Simple, quick, dirty HTTP requester. Hardcoded to http://localhost on port 80.
 # Change this by editing the relevant lines below.
 #
