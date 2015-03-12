@@ -14,7 +14,7 @@
 
 from flask import Flask, make_response, request
 import json, random
-from cheep_utils import Cheep, SentimentAnalyser, CheepNetwork
+from cheep_utils import Cheep, SentimentAnalyser, CheepEngine
 
 app = Flask(__name__)
 
@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 # Initialise our network
 
-cheep_net = CheepNetwork()
+cheep_eng = CheepEngine()
 senti_analyser = SentimentAnalyser("KEY")
 
 
@@ -49,16 +49,16 @@ def jsonify(data):
 def user_endpoint():
     response = build_response()
     if request.method == "GET":
-        response.data = jsonify(cheep_net.get_users())
+        response.data = jsonify(cheep_eng.get_users())
     elif request.method == "POST":
         try:
-            cheep_net.create_user(request.form['name'])
+            cheep_eng.create_user(request.form['name'])
             response.status_code = 201
         except:
             response.status_code = 409
     elif request.method == "DELETE":
-        if cheep_net.get_user(request.form['name']) is not None:
-            cheep_net.delete_user(request.form['name'])
+        if cheep_eng.get_user(request.form['name']) is not None:
+            cheep_eng.delete_user(request.form['name'])
         else:
             response.status_code = 404
     return response
@@ -67,19 +67,19 @@ def user_endpoint():
 @app.route("/users/<name>/followers", methods=["GET", "POST", "DELETE"])
 def followers(name):
     response = build_response()
-    if cheep_net.get_user(name) is None:
+    if cheep_eng.get_user(name) is None:
         response.status_code = 404
     elif request.method == "GET":
-        response.data = jsonify(cheep_net.get_followers(name))
+        response.data = jsonify(cheep_eng.get_followers(name))
     elif request.method == "POST":
-        if cheep_net.get_user(request.form['follower']) is not None:
-            cheep_net.add_follower(name, request.form['follower'])
+        if cheep_eng.get_user(request.form['follower']) is not None:
+            cheep_eng.add_follower(name, request.form['follower'])
             response.status_code = 201
         else:
             response.status_code = 404
     elif request.method == "DELETE":
-        if cheep_net.get_user(request.form['follower']) is not None:
-            cheep_net.delete_follower(name, request.form['follower'])
+        if cheep_eng.get_user(request.form['follower']) is not None:
+            cheep_eng.delete_follower(name, request.form['follower'])
         else:
             response.status_code = 404
 
@@ -88,28 +88,28 @@ def followers(name):
 @app.route("/users/<name>/friends", methods=["GET"])
 def friends(name):
     response = build_response()
-    if(cheep_net.get_user(name)) is None:
+    if(cheep_eng.get_user(name)) is None:
         response.status_code = 404
     else:
-        response.data = cheep_net.get_friends(name)
+        response.data = cheep_eng.get_friends(name)
     return response
 
 
 @app.route("/users/<name>/cheeps", methods=["GET", "POST"])
 def user_cheeps(name):
     response = build_response()
-    if cheep_net.get_user(name) is None:
+    if cheep_eng.get_user(name) is None:
         response.status_code = 404
     elif request.method == "GET":
         cheeps = []
-        for cheep in cheep_net.get_cheeps_of_user(name):
+        for cheep in cheep_eng.get_cheeps_of_user(name):
             cheeps.append(cheep_dict(cheep))
         response.data = jsonify(cheeps)
     elif request.method == "POST":
         try:
             cheep = Cheep(random.randint(0, 10000), request.form['text'], name)
             cheep.sentiment = senti_analyser.get_cheep_sentiment(cheep)
-            cheep_net.add_cheep(cheep)
+            cheep_eng.add_cheep(cheep)
             response.status_code = 201
             response.data = jsonify(cheep_dict(cheep))
         except:
@@ -119,15 +119,15 @@ def user_cheeps(name):
 @app.route("/users/<name>/cheeps/<id>", methods=["DELETE", "PUT"])
 def cheep_id(name, id):
     response = build_response()
-    if cheep_net.get_user(name) is None or cheep_net.get_cheep_by_id(id) is None:
+    if cheep_eng.get_user(name) is None or cheep_eng.get_cheep_by_id(id) is None:
         response.status_code = 404
     elif request.method == "DELETE":
-        cheep_net.delete_cheep(id)
+        cheep_eng.delete_cheep(id)
     elif request.method == "PUT":
-        cheep = cheep_net.get_cheep_by_id(id)
+        cheep = cheep_eng.get_cheep_by_id(id)
         cheep.text = request.form['text']
-        cheep_net.delete_cheep(id)
-        cheep_net.add_cheep(cheep)
+        cheep_eng.delete_cheep(id)
+        cheep_eng.add_cheep(cheep)
         response.data = jsonify(cheep_dict(cheep))
     return response
 
@@ -135,7 +135,7 @@ def cheep_id(name, id):
 def cheeps():
     response = build_response()
     cheeps = []
-    for cheep in cheep_net.get_cheeps():
+    for cheep in cheep_eng.get_cheeps():
         cheeps.append(cheep_dict(cheep))
     response.data = jsonify(cheeps)
     return response
@@ -143,7 +143,7 @@ def cheeps():
 @app.route("/cheeps/<id>", methods=["GET"])
 def cheeps_id(id):
     response = build_response()
-    cheep = cheep_net.get_cheep_by_id(id)
+    cheep = cheep_eng.get_cheep_by_id(id)
     if cheep is None:
         response.status_code = 404
     else:
@@ -154,7 +154,7 @@ def cheeps_id(id):
 def cheep_sentiment(sentiment):
     response = build_response()
     cheeps = []
-    for cheep in cheep_net.get_cheeps_by_sentiment(sentiment):
+    for cheep in cheep_eng.get_cheeps_by_sentiment(sentiment):
         cheeps.append(cheep_dict(cheep))
     response.data = jsonify(cheeps)
     return response
@@ -162,11 +162,11 @@ def cheep_sentiment(sentiment):
 @app.route("/users/<name>/home_timeline", methods=["GET"])
 def home_timeline(name):
     response = build_response()
-    if cheep_net.get_user(name) is None:
+    if cheep_eng.get_user(name) is None:
         response.status_code = 404
     else:
         cheeps = []
-        for cheep in cheep_net.get_cheeps_of_friends(name):
+        for cheep in cheep_eng.get_cheeps_of_friends(name):
             cheeps.append(cheep_dict(cheep))
         response.data = jsonify(cheeps)
     return response

@@ -10,7 +10,7 @@ This module supports some server-side functionality for creating a Twitter clone
 
 You can import all three classes as you would with any Python module:
 
-`from cheep_utils import Cheep, SentimentAnalyser, CheepNetwork`
+`from cheep_utils import Cheep, SentimentAnalyser, CheepEngine`
 
 ### `Cheep(id = None, user = None, text = None, sentiment = None)`
 
@@ -45,9 +45,9 @@ s = SentimentAnalyser("API_KEY")
 sentiment = s.get_cheep_sentiment(cheep)
 ```
 
-### `CheepNetwork()`
+### `CheepEngine()`
 
-This class represents a Cheep network. It persists all data (users, followers, cheeps, sentiment) through `sqlite3`.
+This class represents the relationships between cheeps and users in a Twitter-like online social network. It persists all data (users, followers, cheeps, sentiment) through `sqlite3` (shudders...).
 
 All users should be represented by Strings (e.g. `"will"`) and all cheep IDs should be integers (e.g. `1`).
 
@@ -87,9 +87,13 @@ Returns a list of followers of `user`.
 
 Returns a list of the friends of `user`. *(Note: Friends are the inverse of followers)*
 
+##### `NetworkX.DiGraph get_social_graph()`
+
+Return a NetworkX directed graph representing the user connections within the `CheepEngine` instance.
+
 ##### `add_cheep(Cheep)`
 
-Adds a new instantiated `Cheep` object to the network.
+Adds a new instantiated `Cheep` object to the engine.
 
 Throws an exception if a cheep with the same ID already exists.
 
@@ -99,7 +103,7 @@ Returns a single `Cheep` instance with ID matching `id`.
 
 ##### `Cheep[] get_cheeps()`
 
-Returns a list of all `Cheep` instances in the network.
+Returns a list of all `Cheep` instances in the engine.
 
 ##### `Cheep[] get_cheeps_by_sentiment(sentiment)`
 
@@ -119,25 +123,25 @@ Delete's a `Cheep` with id `id`.
 
 ##### `reset()`
 
-Resets the network to its original state: empty with no users, followers, or cheeps.
+Resets the engine to its original state: empty with no users, followers, or cheeps.
 
 
 #### Example usage
 
 ```python
-network = CheepNetwork()
+engine = CheepEngine()
 c1 = Cheep(1, "Hello!", "will")
 c2 = Cheep(2, "Hello again", "sam")
 c3 = Cheep(3, "Goodbye", "will")
 
-network.add_cheep(c1)
-network.add_cheep(c2)
-network.add_cheep(c3)
+engine.add_cheep(c1)
+engine.add_cheep(c2)
+engine.add_cheep(c3)
 
-network.add_follower("will", "sarah")
-network.add_follower("sam", "sarah")
+engine.add_follower("will", "sarah")
+engine.add_follower("sam", "sarah")
 
-network.get_tweets_by_id(1) # Returns the Cheep by 'will'
-network.get_cheeps_of_user("will") # Returns all Cheeps by user 'will'
-network.get_cheeps_of_friends("sarah") # Returns all Cheeps by 'will' and 'sam'
+engine.get_tweets_by_id(1) # Returns the Cheep by 'will'
+engine.get_cheeps_of_user("will") # Returns all Cheeps by user 'will'
+engine.get_cheeps_of_friends("sarah") # Returns all Cheeps by 'will' and 'sam'
 ```
