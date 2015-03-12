@@ -1,3 +1,5 @@
+# Example solution to MSc practical session.
+
 import sqlite3, urllib2, urllib, json
 
 class Cheep:
@@ -31,10 +33,13 @@ class SentimentAnalyser:
 
 class CheepEngine:
     def __init__(self):
+        self._con = None
         self._create_tables()
 
     def _connect(self):
-        self._con = sqlite3.connect("cheep_base.db")
+        if self._con is None:
+            # check_same_thread=False is NOT generally recommended!
+            self._con = sqlite3.connect("cheep_base.db", check_same_thread = False)
         self._c = self._con.cursor()
 
     def _create_tables(self):
@@ -113,6 +118,7 @@ class CheepEngine:
 
     def add_cheep(self, cheep):
         self._connect()
+        print cheep
         if self.get_cheep_by_id(cheep.id) is not None:
             raise Exception("There's already a cheep with that ID!")
         cheep_data = (cheep.id, cheep.user, cheep.text, cheep.sentiment)
