@@ -73,11 +73,15 @@ Returns a list of users.
 
 ##### `add_follower(user, follower)`
 
-Adds `followe` to `user`'s followers list.
+Adds `follower` to `user`'s followers list.
+
+Throws an `Exception` if `user` or `follower` are not known by the engine.
 
 ##### `delete_follower(user, follower)`
 
 Removes `follower` from `user`'s followers list.
+
+Throws an `Exception` if `user` is not known by the engine.
 
 ##### `str[] get_followers(user)`
 
@@ -95,7 +99,7 @@ Return a NetworkX directed graph representing the user connections within the `C
 
 Adds a new instantiated `Cheep` object to the engine.
 
-Throws an exception if a cheep with the same ID already exists.
+Throws an `Exception` if a cheep with the same ID already exists.
 
 ##### `Cheep get_cheep_by_id(id)`
 
@@ -113,9 +117,14 @@ Returns a list of `Cheep` instances with sentiment `sentiment`.
 
 Returns a list of `Cheep` instances posted by user `user`.
 
+Throws an `Exception` if `user` is not known by the engine.
+
 ##### `Cheep[] get_cheeps_of_friends(user)`
 
 Returns a list of `Cheep` instances posted by user `user`'s friends.
+
+Throws an `Exception` if `user` is not known by the engine.
+
 
 ##### `delete_cheep(id)`
 
