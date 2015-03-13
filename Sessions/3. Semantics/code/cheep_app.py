@@ -108,7 +108,7 @@ def user_cheeps(name):
     elif request.method == "POST":
         try:
             cheep = Cheep(random.randint(0, 10000), request.form['text'], name)
-            cheep.sentiment = senti_analyser.get_cheep_sentiment(cheep)
+            #cheep.sentiment = senti_analyser.get_cheep_sentiment(cheep)
             cheep_eng.add_cheep(cheep)
             response.status_code = 201
             response.data = jsonify(cheep_dict(cheep))

@@ -1,4 +1,6 @@
-# Example solution to MSc practical session.
+# Utility classes for creating a Twitter-like social network.
+#
+# See docs on GitHub for more information.
 
 import sqlite3, urllib2, urllib, json
 
@@ -85,6 +87,8 @@ class CheepEngine:
 
     def add_follower(self, user, follower):
         self._connect()
+        if self.get_user(user) is None or self.get_user(follower) is None:
+            raise Exception("Either/both users do not exist.")
         user_data = (user, follower)
         self._c.execute("DELETE FROM follower WHERE user='"+user+"' and follower='"+follower+"'")
         self._c.execute("INSERT INTO follower VALUES(?,?)", user_data)
@@ -92,6 +96,8 @@ class CheepEngine:
     
     def delete_follower(self, user, follower):
         self._connect()
+        if self.get_user(user) is None or self.get_user(follower) is None:
+            raise Exception("Either/both users do not exist.")
         self._c.execute("DELETE FROM follower WHERE user='"+user+"' and follower='"+follower+"'")
         self._con.commit()
 
@@ -118,9 +124,10 @@ class CheepEngine:
 
     def add_cheep(self, cheep):
         self._connect()
-        print cheep
         if self.get_cheep_by_id(cheep.id) is not None:
             raise Exception("There's already a cheep with that ID!")
+        if self.get_user(cheep.user) is None:
+            raise Exception("There is no registered user with name "+str(cheep.user))
         cheep_data = (cheep.id, cheep.user, cheep.text, cheep.sentiment)
         self._c.execute("INSERT INTO cheep VALUES (?,?,?,?)", cheep_data)
         self._con.commit()
@@ -148,6 +155,8 @@ class CheepEngine:
 
     def get_cheeps_of_user(self, user):
         self._connect()
+        if self.get_user(user) is None:
+             raise Exception("There is no registered user with name "+str(user))
         cheeps = []
         for c in self._c.execute("SELECT * FROM cheep WHERE user='"+user+"'").fetchall():
             cheeps.append(Cheep(c[0], c[2], c[1], c[3]))
@@ -155,6 +164,8 @@ class CheepEngine:
 
     def get_cheeps_of_friends(self, user):
         self._connect()
+        if self.get_user(user) is None:
+             raise Exception("There is no registered user with name "+str(user))
         cheeps = []
         for c in self._c.execute("SELECT c.id, c.user, c.text, c.sentiment FROM cheep as c LEFT JOIN follower as f on c.user=f.user WHERE f.follower='"+user+"'").fetchall():
             cheeps.append(Cheep(c[0], c[2], c[1], c[3]))
