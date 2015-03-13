@@ -11,7 +11,10 @@ class Cheep:
         self.id = id
         self.text = text
         self.user = user
-        self.sentiment = "UNKNOWN"
+        if sentiment is None:
+            self.sentiment = "UNKNOWN"
+        else:
+            self.sentiment = sentiment
     def __str__(self):
         return "Cheep "+str(self.id)+" [user: "+str(self.user)+"] [text: "+str(self.text)+"]"
     def __repr__(self):
