@@ -6,4 +6,8 @@
 *.aux
 *.log
 *.db
+*.jar
+wekapy_data/*
+*.arff
+*.model
 config.py
