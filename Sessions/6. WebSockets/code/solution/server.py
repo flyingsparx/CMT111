@@ -1,20 +1,20 @@
 from flask import Flask, render_template
 from flask.ext.socketio import SocketIO, emit
+import json
 
 from game_engine import Game
-import random,json
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
 num_players = 2
-winning_score = 2
+winning_score = 10
 game = Game()
 game_ended = False
 
 @app.route('/')
 def index():
-    return render_template('./game.html')
+    return render_template('game.html')
 
 def start_game():
     broadcast_game_info()
