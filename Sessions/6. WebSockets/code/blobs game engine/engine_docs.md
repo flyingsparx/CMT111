@@ -50,6 +50,7 @@ As with the players, this information is generated for you by the backend.
 
 ```javascript 
 var game = Game();
+game.init();
 
 ... // receive information about players from server
 for(var i = 0; i < server_data.players.length; i++){
@@ -164,6 +165,8 @@ game.add_player("sarah")
 
 ... # some time later
 
+game.start()
+
 game.move_player("will", "up")
 
 ... # some time later
@@ -180,6 +183,6 @@ return json.dumps(game_info)
 
 if game.is_started and not game.is_alive:
     for player in game.players:
-        if player.winner = True
+        if player.winner is True:
             print player.name+" wins the game."
 ```
