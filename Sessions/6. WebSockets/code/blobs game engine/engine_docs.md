@@ -38,6 +38,8 @@ Update the position of a player on the board. The player object needs to contain
 
 All of this data is generated for you by the backend engine, so don't worry about generating this yourself.
 
+Note that you don't need to add players to the game explicitly - this is checked as they are updated.
+
 ### `Game.update_food(Food obj)`
 Update the position of the food on the board. The food object needs to contain at least the following fields:
 

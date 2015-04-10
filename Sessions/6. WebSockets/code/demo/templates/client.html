@@ -1,0 +1,37 @@
+<html>
+    <body>
+        <button onclick="send_message()" id="trigger_message">Send a normal message</button> - 
+        <button onclick="send_broadcast()" id="trigger_broadcast">Send a broadcast message</button>
+        
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+        <script>
+            var socket = io.connect('/');
+
+            var message_count = 0;
+
+            function do_something_with_server_data(data){
+                document.getElementsByTagName("body")[0].innerHTML+='<p>'+data+'</p>';
+            }
+
+            function do_something_with_broadcasted_server_data(data){
+                document.getElementsByTagName("body")[0].innerHTML+='<h3>'+data.message+' (sent at '+data.time+')</h3>';
+            }
+
+            function send_broadcast(){    
+                socket.emit('broadcast message', 'Hello everybody!');
+            }
+
+            function send_message(){
+                message_count++;
+                socket.emit('message', {message: 'hi, server!', message_count:message_count});
+            }
+
+            socket.on('response key', function(data){
+                do_something_with_server_data(data);
+            });     
+            socket.on('broadcast message', function(data){
+                do_something_with_broadcasted_server_data(data);
+            });
+        </script>
+    </body>
+</html>
