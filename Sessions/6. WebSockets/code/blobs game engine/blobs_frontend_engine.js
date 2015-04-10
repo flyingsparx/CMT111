@@ -31,6 +31,10 @@ function Game(){
     };
 
     this.init = function(id){
+        if(id == null || id == undefined){
+            document.getElementsByTagName("body")[0].innerHTML += '<div id="game"></div>';
+            id = game;
+        }
         elem = document.getElementById(id);
 
         elem.style.position="relative";

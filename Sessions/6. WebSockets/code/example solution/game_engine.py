@@ -8,6 +8,7 @@ class Player:
         self.y = random.randint(0,19)
         self.score = 0
         self.colour = colour
+        self.winner = False
     def to_dict(self):
         ret = {}
         ret['name'] = self.name
@@ -30,16 +31,28 @@ class Food:
         return ret
 
 class Game:
-    def __init__(self):
+    def __init__(self, winning_score = 10):
         self.players = []
         self.food = Food()
+        self.player_colours = ["red","blue","yellow","brown","black","pink","cyan"]
+        self.winning_score = winning_score
+        self.is_alive = True
+        self.is_started = False
        
     def add_player(self, name):
-        colours = ["red","blue","yellow","brown"]
-        p = Player(name.replace(" ",""),colours[len(self.players)])
+        if self.is_started:
+            raise Exception("Game has already started")
+        if len(self.players) >= len(self.player_colours):
+            raise Exception("Too many players")
+        p = Player(name.replace(" ",""),self.player_colours[len(self.players)])
         self.players.append(p)
 
+    def start(self):
+        self.is_started = True
+
     def move_player(self, name, direction):
+        if not self.is_started:
+            raise Exception("Game hasn't yet started")
         for p in self.players:
             if p.name == name:
                 if direction == 'up' and p.y > 0:
@@ -53,3 +66,6 @@ class Game:
                 if p.x == self.food.x and p.y == self.food.y:
                     p.score += 1
                     self.food = Food()
+                if p.score >= self.winning_score:
+                    p.winner = True
+                    p.is_alive = False

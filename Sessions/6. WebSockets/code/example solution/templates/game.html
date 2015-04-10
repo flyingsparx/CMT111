@@ -1,0 +1,153 @@
+<html>
+    <body>
+        <h1>Will's super cool Game</h1>
+        <h2>Waiting for <span id="num_more_players_needed">{{players_needed}}</span> player(s)...</h2>
+        <h3>Players currently in game: <span id="player_list">
+            {% for player in players %}
+            <span style="color:{{player.colour}}">{{player.name}}</span> 
+            {% endfor %}
+            </span>
+        </h3>
+
+        {% if players|length == 0 %}
+        <p id="player_count_label">Players: <input type="number" id="player_count" value="{{players_needed}}"/></p>
+        <button style="display:none" id="start_game">Start</button>
+        {% endif %}
+
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+        <script src="/static/front_end_engine.js"></script>
+        <script>
+
+            /*
+                Helper variables and functions
+            */
+            var ui;
+            function reload_ui(){
+                ui = {
+                    start_button:document.getElementById("start_game"),
+                    player_count_field:document.getElementById("player_count"),
+                    player_count_label:document.getElementById("player_count_label"),
+                    players_needed:document.getElementById("num_more_players_needed"),
+                    player_list:document.getElementById("player_list"),
+                    game_info:document.getElementsByTagName("h2")[0]
+                };
+            }
+
+            function bind_listeners(){
+                document.onkeydown = function(event){
+                    if(game.started && !game.finished){
+                        if(event.keyCode == 38){
+                            socket.emit('update player',JSON.stringify({name:name,direction:"up"}));
+                        }
+                        if(event.keyCode == 37){
+                            socket.emit('update player',JSON.stringify({name:name,direction:"left"}));
+                        }
+                        if(event.keyCode == 39){
+                            socket.emit('update player',JSON.stringify({name:name,direction:"right"}));
+                        }
+                        if(event.keyCode == 40){
+                            socket.emit('update player',JSON.stringify({name:name,direction:"down"}));
+                        }
+                    }
+                };
+                try{
+                    ui.start_button.onclick = function(){
+                        if(game.started){
+                            socket.emit('restart game');
+                        }
+                        else{
+                            socket.emit('start game');
+                        }
+                    };
+                }catch(err){}
+                try{
+                    ui.player_count_field.onkeyup = function(){
+                        socket.emit('player count', ui.player_count_field.value);
+                    };
+                }catch(err){}
+            }
+
+            function update_interface(){
+                reload_ui();
+                ui.player_list.innerHTML = "";
+
+                for(var i = 0; i < players.length; i++){
+                    ui.player_list.innerHTML += " <span style='color:"+players[i].colour+";'>"+players[i].name+"</span>";
+                }
+
+                if(ui.start_button != null){
+                    if(total_players_needed == players.length){
+                        ui.start_button.style.display = "block";
+                    }
+                    else{
+                        ui.start_button.style.display = "none";
+                    }
+                    if(game.started == true){
+                        ui.start_button.innerHTML = "Restart";
+                        ui.player_count_field.style.display="none";
+                        ui.player_count_label.style.display="none";
+                    }
+                }
+                if(game.started){
+                    ui.game_info.innerHTML = "Game started";
+                }
+                if(!game.started){
+                    ui.players_needed.innerHTML = players_needed;
+                }
+                if(game.finished){
+                    ui.game_info.innerHTML = "Game finished";
+                }
+                bind_listeners();
+            }
+
+    
+            /*
+               More interesting game-related code
+            */
+    
+            var game = new Game();
+            var name = prompt("Enter a player name:").replace(/ /g,'');
+            var players_needed = {{players_needed}};
+            var total_players_needed = {{players_needed}};
+            reload_ui();
+            bind_listeners();
+
+            var socket = io.connect('/');
+            socket.emit('new player', name);
+
+            socket.on('player joined', function(msg){
+                players_needed = msg.players_needed;
+                players = msg.players;
+                update_interface(); 
+            });
+            socket.on('new player count', function(msg){
+                players_needed = msg.players_needed;
+                total_players_needed = msg.total_players_needed;
+                update_interface();
+            });   
+            socket.on('game restarted', function(msg){
+                location.reload();
+            });
+            socket.on('game info', function(msg) {
+                if(game.started == false){
+                    bind_listeners();
+                    game.init();
+                }
+                game.update_food(msg.food);
+                for(var i = 0; i < msg.players.length; i++){
+                    game.update_player(msg.players[i]);
+                }
+                update_interface();
+           });
+           socket.on('game end', function(msg){
+                game.finished = false;
+                if(msg.winner == name){
+                    alert('Game over! You win!');
+                }
+                else{
+                    alert('Game over! You lose :(');
+                }
+           });
+        </script>
+    </body>
+</html>
