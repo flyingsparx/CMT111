@@ -1,0 +1,143 @@
+\documentclass[11pt,a4paper]{report}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[explicit]{titlesec}
+\usepackage[dvipsnames]{color}
+
+\definecolor{mygray}{gray}{.75}
+
+\titleformat{name=\section,numberless}[display]
+  {\normalfont\scshape\Large}
+  {\hspace*{-10pt}#1}
+  {-15pt}
+  {\hspace*{-110pt}\rule{\dimexpr\textwidth+80pt\relax}{2pt}\Huge}
+\titlespacing*{\section}{0pt}{30pt}{10pt}
+
+\titleformat{name=\subsection,numberless}[display]
+  {\normalfont\scshape}
+  {\hspace*{-10pt}#1}
+  {-15pt}
+  {\hspace*{-110pt}\rule{\dimexpr\textwidth+30pt\relax}{0.4pt}\Huge}
+\titlespacing*{\subsection}{0pt}{20pt}{5pt}
+
+
+\begin{document}
+
+\noindent\Large\textbf{CMT111 (Web and Social Computing)}\\
+\noindent\large\textit{Revision guide and topic list}
+\vskip30pt
+
+In general, anything I have lectured on is examinable, but this document lists the key topics and some of the key items from each. 
+
+The practical parts of each session are also examinable in terms of the key learning outcomes they try to convey (e.g. graph construction, interaction with Twitter, etc.). Although you should aim to reproduce code that is as close-to-real as possible (and that you follow appropriate package or programming language guidelines), it won't be expected that your code actually completely runs `as is'.
+
+\section*{Topics}
+
+\begin{itemize}
+    \item Graph theory and networks
+        \begin{itemize}
+            \item Network characteristics (traversing, versatility, robuestness, redundancy)
+            \item Definition of key graph concepts (nodes, edges, arcs, neighbours, degree, adjacency, walks, connectivity, cuts, incidence, etc.)
+            \item Mathematical definitions (including key descriptors: in ($\in$), forall ($\forall$), such that (:), etc.)
+            \item Graph types (weighted, directed, subgraphs, planar, bipartite, complete, isomorphic, tree, scale-free)
+            \item Cliques (maximum and maximal)
+            \item \textit{Normalised} centrality (betwenness, closeness)
+            \item Eccentricity, radius, and diameter
+            \item Using NetworkX and Python to construct graphs
+        \end{itemize}
+
+    \item Social networks
+        \begin{itemize}
+            \item Web 2.0
+            \item Key features (influence, communities, modelling social structures)
+            \item Representing constructs (e.g. friendships) using graph theory mathematical notation
+            \item Influence (Klout, prestige)
+            \item Information flow (retweets, tweets)
+            \item Semantics and understanding social meaning (natural-language processing (NLP), sentiment analysis (Alchemy API, datumbox, Stanford), using ontologies) for detecting rumours, anger, hate-speech, etc.
+            \item Using Tweepy to harvest data from Twitter 
+            \item Understanding usefulness of social research tools (such as COSMOS)
+        \end{itemize}
+
+    \item The web, Internet finance, and the cloud
+        \begin{itemize}
+            \item RESTful web APIs
+                \begin{itemize}
+                    \item Features of RESTful APIs
+                    \item Understanding the Internet of Things and machine-machine communication (as well as `human'-machine)
+                    \item Resources (collections and instances)
+                    \item Constructing useful collection-oriented endpoints
+                    \item HTTP messages:
+                        \begin{itemize}
+                            \item Methods
+                            \item Status codes
+                            \item Outline of requests and responses
+                        \end{itemize}
+                    \item Using HTTP methods and resource paths
+                    \item Authentication (basic auth, access keys, OAUth)
+                    \item Flexibility (versioning, content/data type returned, supporting cross-domain requests)
+                \end{itemize}
+            \item Bitcoin
+                \begin{itemize}
+                    \item Bitcoin network
+                    \item Basic understanding of the mining process and reward
+                    \item Bitcoin blocks, their contents, and the block chain
+                \end{itemize}
+            \item Cloud services
+                \begin{itemize}
+                    \item Advantages and disadvantages of businesses deploying to cloud systems
+                    \item Cloud models (IaaS, PaaS, SaaS)
+                    \item Uses and examples of each cloud model
+                \end{itemize}
+            \item Real-time content-delivery
+                \begin{itemize}
+                    \item Long-polling (through AJAX)
+                    \item HTML5 standard \texttt{server-sent-event}s
+                    \item Websockets
+                    \item Overview / advantages / (disadvantages) of each
+                \end{itemize}
+        \end{itemize}
+
+    \item Mobile networking
+        \begin{itemize}
+            \item Service sets (basic, infrastructure, independent, extended)
+            \item Handover
+            \item Interference: Multiple access:
+                \begin{itemize}
+                    \item Space-division multiple access
+                    \item Frequency-division multiple access
+                    \item Time-division multiple access
+                    \item Frequency/Time division multiple access
+                    \item Code division multiple access
+                \end{itemize}
+            \item Inferference: RTS/CTS
+            \item Ad-hoc networking:
+                \begin{itemize}
+                    \item Advantages of these networks (robustness, scalability, etc.)
+                    \item Uses of such networks (traffic, emergencies, etc.)
+                    \item Properties of such networks (decentralised, direct connection, equal peers, etc.)
+                    \item MANETs (connectivity, movement, centrality/influence, range/distance)
+                    \item Routing: Proactive and reactive
+                    \item Opportunistic networking (general understanding, uses, limitations, routing, etc.)
+                \end{itemize}
+        \end{itemize}
+
+    \item Trust and reputation
+        \begin{itemize}
+            \item In centralised networks
+            \item Problems with managing trust in decentralised networks
+            \item Determining and sharing trust
+            \item Collusion for malicious assigning of trust scores
+            \item Trust in ad-hoc networks (no rep vs. bad rep, Eigentrust) - problems with trust in ad-hoc networks
+            \item Deriving trust in OSNs (Twitter, eBay, etc.)
+            \item Recongition and the recognition heuristic
+            \item Trust on the web (PageRank - surfer models)
+            \item Relevance vs quality
+            \item Web crawlers:
+                \begin{itemize}
+                    \item Manipulating and determining PageRank
+                    \item robots.txt file (robots-exclusion protocol) - how does it work and why do it?
+                \end{itemize}
+            \item SEO (why do it? Ways of doing it, etc.)
+        \end{itemize}
+\end{itemize}
+
+\end{document}
